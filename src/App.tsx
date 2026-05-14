@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import { motion } from 'motion/react';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 import { 
   Instagram, 
   ArrowRight, 
@@ -15,6 +18,16 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      autoRaf: true,
+    });
+    
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   return (
     <div className="min-h-[100vh] bg-black text-white font-sans overflow-x-hidden flex flex-col relative select-none z-0">
       {/* Background Decorative Elements */}
