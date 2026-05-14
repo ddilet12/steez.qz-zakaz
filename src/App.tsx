@@ -23,7 +23,21 @@ export default function App() {
       autoRaf: true,
     });
     
+    const handleClick = (e: MouseEvent) => {
+      const target = (e.target as Element).closest('a');
+      if (target) {
+        const href = target.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          lenis.scrollTo(href);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
     return () => {
+      document.removeEventListener('click', handleClick);
       lenis.destroy();
     };
   }, []);
