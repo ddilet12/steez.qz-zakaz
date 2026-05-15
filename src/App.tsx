@@ -29,7 +29,8 @@ export default function App() {
         const href = target.getAttribute('href');
         if (href && href.startsWith('#')) {
           e.preventDefault();
-          lenis.scrollTo(href);
+          // Добавлен offset -80px, чтобы fixed navbar не перекрывал контент
+          lenis.scrollTo(href, { offset: -80 });
         }
       }
     };
@@ -43,13 +44,13 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-[100vh] bg-black text-white font-sans overflow-x-hidden flex flex-col relative select-none z-0">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none -z-10" />
-      <div className="absolute bottom-[-50px] left-[-50px] w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px] pointer-events-none -z-10" />
+    <div className="min-h-screen bg-black text-white font-sans flex flex-col relative z-0">
+      {/* Background Decorative Elements - добавлены transform-gpu для оптимизации скролла */}
+      <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none -z-10 transform-gpu will-change-transform" />
+      <div className="absolute bottom-[-50px] left-[-50px] w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px] pointer-events-none -z-10 transform-gpu will-change-transform" />
 
       {/* Navbar */}
-      <header className="w-full z-10 border-b border-white/10 bg-black/80 backdrop-blur-md sticky top-0">
+      <header className="w-full z-10 border-b border-white/10 bg-black/80 backdrop-blur-md fixed top-0 transform-gpu">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer">
             <span className="text-2xl font-black tracking-tighter italic uppercase text-white font-heading">
@@ -68,16 +69,17 @@ export default function App() {
             href="https://instagram.com/steez.catalog" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 hover:bg-white/5 transition-all text-white"
+            className="w-11 h-11 flex items-center justify-center rounded-full border border-white/10 hover:bg-white/5 transition-all text-white active:scale-95"
+            aria-label="Instagram"
           >
-            <Instagram size={16} />
+            <Instagram size={18} />
           </a>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col items-center relative w-full">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-8 pt-32 pb-16 lg:py-24 min-h-[calc(100vh-80px)]">
+      <main className="flex-grow flex flex-col items-center relative w-full pt-20">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 pt-16 pb-16 lg:py-24 min-h-[calc(100vh-80px)]">
           
           {/* Hero Left - Text */}
           <motion.div 
@@ -91,8 +93,8 @@ export default function App() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold leading-[0.9] tracking-tight mb-4 uppercase">
-                Любая пара — <br/>
+              <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold leading-[1] tracking-tight mb-4 uppercase text-balance">
+                Любая пара — <br className="hidden md:block" />
                 <span className="text-white/40">напрямую с фабрики</span>
               </h1>
 
@@ -134,17 +136,17 @@ export default function App() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-            className="w-full lg:w-1/2 h-[400px] lg:h-[600px] flex items-center justify-center relative select-none"
+            className="w-full lg:w-1/2 h-[350px] sm:h-[450px] lg:h-[600px] flex items-center justify-center relative select-none"
           >
             {/* Floating Background Elements */}
-            <div className="absolute w-[300px] h-[300px] lg:w-[400px] lg:h-[400px] border border-white/5 rounded-full pointer-events-none"></div>
-            <div className="absolute w-[400px] h-[400px] lg:w-[500px] lg:h-[500px] border border-white/5 rounded-full scale-110 pointer-events-none"></div>
-            <div className="absolute text-[80px] md:text-[120px] lg:text-[150px] font-heading font-black text-white/[0.02] -rotate-12 pointer-events-none uppercase tracking-tighter self-center whitespace-nowrap">STEEZ.QZ</div>
+            <div className="absolute w-[250px] h-[250px] md:w-[350px] md:h-[350px] lg:w-[400px] lg:h-[400px] border border-white/5 rounded-full pointer-events-none transform-gpu"></div>
+            <div className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] border border-white/5 rounded-full scale-110 pointer-events-none transform-gpu"></div>
+            <div className="absolute text-[60px] sm:text-[90px] md:text-[120px] lg:text-[150px] font-heading font-black text-white/[0.02] -rotate-12 pointer-events-none uppercase tracking-tighter self-center whitespace-nowrap">STEEZ.QZ</div>
             
             <motion.div
-              animate={{ y: [-15, 15, -15] }}
+              animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10 w-full max-w-md lg:max-w-lg transform -rotate-12 hover:rotate-0 transition-transform duration-700"
+              className="relative z-10 w-full max-w-[280px] sm:max-w-md lg:max-w-lg transform-gpu -rotate-12 hover:rotate-0 transition-transform duration-700"
             >
               <div className="relative rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 backdrop-blur-sm aspect-square md:aspect-square drop-shadow-[0_50px_50px_rgba(255,255,255,0.15)]">
                  <img 
@@ -234,9 +236,9 @@ export default function App() {
 
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 text-white/80">
               {/* Card 1: Almaty */}
-              <div className="group border border-white/10 rounded-[2rem] p-8 lg:p-12 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
+              <div className="group border border-white/10 rounded-[2rem] p-6 sm:p-8 lg:p-12 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
                 {/* subtle gradient glow */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full blur-3xl group-hover:bg-white/[0.04] transition-colors -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full blur-3xl group-hover:bg-white/[0.04] transition-colors -translate-y-1/2 translate-x-1/2 transform-gpu will-change-transform"></div>
 
                 <div className="flex items-center gap-4 mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
@@ -282,9 +284,9 @@ export default function App() {
               </div>
 
               {/* Card 2: Other Cities */}
-              <div className="group border border-white/10 rounded-[2rem] p-8 lg:p-12 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
+              <div className="group border border-white/10 rounded-[2rem] p-6 sm:p-8 lg:p-12 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
                 {/* subtle gradient glow */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full blur-3xl group-hover:bg-white/[0.04] transition-colors -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full blur-3xl group-hover:bg-white/[0.04] transition-colors -translate-y-1/2 translate-x-1/2 transform-gpu will-change-transform"></div>
 
                 <div className="flex items-center gap-4 mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
@@ -333,40 +335,40 @@ export default function App() {
               <h2 className="font-heading text-3xl md:text-5xl font-bold uppercase tracking-tight mb-4">Как оформить заказ?</h2>
             </div>
             
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 text-white/80 mb-16">
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 text-white/80 mb-16">
               {/* Step 1 */}
-              <div className="group border border-white/10 rounded-[2rem] p-8 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
-                <div className="absolute -top-4 -right-4 p-8 text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none">01</div>
-                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-xl font-heading font-bold mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">1</div>
-                <p className="text-lg md:text-xl text-white font-medium leading-relaxed">Отправьте фото или название модели</p>
+              <div className="group border border-white/10 rounded-3xl p-6 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
+                <div className="absolute -top-4 -right-4 p-6 sm:p-8 text-6xl sm:text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none pointer-events-none">01</div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/20 flex items-center justify-center text-lg sm:text-xl font-heading font-bold mb-4 sm:mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">1</div>
+                <p className="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed">Отправьте фото или название модели</p>
               </div>
 
               {/* Step 2 */}
-              <div className="group border border-white/10 rounded-[2rem] p-8 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
-                <div className="absolute -top-4 -right-4 p-8 text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none">02</div>
-                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-xl font-heading font-bold mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">2</div>
-                <p className="text-lg md:text-xl text-white font-medium leading-relaxed">Мы проверим наличие и сообщим точную цену</p>
+              <div className="group border border-white/10 rounded-3xl p-6 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
+                <div className="absolute -top-4 -right-4 p-6 sm:p-8 text-6xl sm:text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none pointer-events-none">02</div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/20 flex items-center justify-center text-lg sm:text-xl font-heading font-bold mb-4 sm:mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">2</div>
+                <p className="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed">Мы проверим наличие и сообщим точную цену</p>
               </div>
 
               {/* Step 3 */}
-              <div className="group border border-white/10 rounded-[2rem] p-8 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
-                <div className="absolute -top-4 -right-4 p-8 text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none">03</div>
-                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-xl font-heading font-bold mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">3</div>
-                <p className="text-lg md:text-xl text-white font-medium leading-relaxed">Вносите предоплату 50–100%</p>
+              <div className="group border border-white/10 rounded-3xl p-6 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
+                <div className="absolute -top-4 -right-4 p-6 sm:p-8 text-6xl sm:text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none pointer-events-none">03</div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/20 flex items-center justify-center text-lg sm:text-xl font-heading font-bold mb-4 sm:mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">3</div>
+                <p className="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed">Вносите предоплату 50–100%</p>
               </div>
 
               {/* Step 4 */}
-              <div className="group border border-white/10 rounded-[2rem] p-8 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
-                <div className="absolute -top-4 -right-4 p-8 text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none">04</div>
-                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-xl font-heading font-bold mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">4</div>
-                <p className="text-lg md:text-xl text-white font-medium leading-relaxed">Ожидаете доставку 8–14 дней</p>
+              <div className="group border border-white/10 rounded-3xl p-6 lg:p-10 hover:bg-white/[0.02] transition-colors relative overflow-hidden flex flex-col bg-white/[0.01]">
+                <div className="absolute -top-4 -right-4 p-6 sm:p-8 text-6xl sm:text-7xl font-heading font-black text-white/[0.02] group-hover:text-white/[0.04] transition-colors -z-10 select-none pointer-events-none">04</div>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/20 flex items-center justify-center text-lg sm:text-xl font-heading font-bold mb-4 sm:mb-6 group-hover:bg-white group-hover:text-black transition-colors text-white">4</div>
+                <p className="text-base sm:text-lg md:text-xl text-white font-medium leading-relaxed">Ожидаете доставку 8–14 дней</p>
               </div>
             </div>
 
             {/* CTA Block within the section */}
-            <div className="flex flex-col lg:flex-row items-center justify-between p-10 lg:p-16 border border-white/10 rounded-[2rem] bg-white/[0.03] relative overflow-hidden group hover:bg-white/[0.04] transition-colors">
-               <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.03] rounded-full blur-[100px] group-hover:bg-white/[0.05] transition-colors -translate-y-1/2 translate-x-1/3"></div>
-               <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.03] rounded-full blur-[100px] group-hover:bg-white/[0.04] transition-colors translate-y-1/2 -translate-x-1/3"></div>
+            <div className="flex flex-col lg:flex-row items-center justify-between p-8 sm:p-10 lg:p-16 border border-white/10 rounded-[2rem] bg-white/[0.03] relative overflow-hidden group hover:bg-white/[0.04] transition-colors">
+               <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.03] rounded-full blur-[100px] group-hover:bg-white/[0.05] transition-colors -translate-y-1/2 translate-x-1/3 transform-gpu will-change-transform"></div>
+               <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.03] rounded-full blur-[100px] group-hover:bg-white/[0.04] transition-colors translate-y-1/2 -translate-x-1/3 transform-gpu will-change-transform"></div>
                
                <div className="mb-8 lg:mb-0 z-10 flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
                  <h3 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold uppercase tracking-tight text-white mb-2">Ищешь редкую пару?</h3>

@@ -7,10 +7,18 @@
 }
 
 @layer base {
-  html {
-    scroll-padding-top: 5rem;
+  html, body {
+    @apply bg-black text-white antialiased selection:bg-white/30 selection:text-white;
+    /* Устраняет горизонтальный скролл на мобильных устройствах */
+    overflow-x: hidden;
+    width: 100%;
+    /* Исправляет баги с touch скроллом на iOS */
+    -webkit-overflow-scrolling: touch;
+     Overscroll-behavior-y: none;
   }
-  body {
-    @apply bg-black text-white antialiased selection:bg-white selection:text-black;
+  
+  * {
+    /* Убирает синий квадрат при тапе по элементам на мобильных (iOS/Android) */
+    -webkit-tap-highlight-color: transparent;
   }
 }
