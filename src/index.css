@@ -7,14 +7,12 @@
 }
 
 @layer base {
-  html, body {
+  html {
+    scroll-padding-top: 5rem;
+  }
+  body {
     @apply bg-black text-white antialiased selection:bg-white/30 selection:text-white;
-    /* Устраняет горизонтальный скролл на мобильных устройствах */
-    overflow-x: hidden;
-    width: 100%;
-    /* Исправляет баги с touch скроллом на iOS */
-    -webkit-overflow-scrolling: touch;
-     Overscroll-behavior-y: none;
+    overflow-x: clip;
   }
   
   * {
