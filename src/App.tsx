@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
@@ -18,6 +18,16 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const lenis = new Lenis({
       autoRaf: true,
@@ -44,13 +54,13 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col relative z-0">
+    <div className="min-h-dvh bg-black text-white font-sans flex flex-col relative z-0">
       {/* Background Decorative Elements - добавлены transform-gpu для оптимизации скролла */}
       <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none -z-10 transform-gpu will-change-transform" />
       <div className="absolute bottom-[-50px] left-[-50px] w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px] pointer-events-none -z-10 transform-gpu will-change-transform" />
 
       {/* Navbar */}
-      <header className="w-full z-10 border-b border-white/10 bg-black/80 backdrop-blur-md fixed top-0 transform-gpu">
+      <header className={`w-full z-10 fixed top-0 transform-gpu transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10' : 'bg-transparent border-transparent'}`}>
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer">
             <span className="text-2xl font-black tracking-tighter italic uppercase text-white font-heading">
@@ -79,7 +89,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center relative w-full pt-20">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 pt-16 pb-16 lg:py-24 min-h-[calc(100vh-80px)]">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-8 pt-16 pb-16 lg:py-24 min-h-[calc(100dvh-80px)]">
           
           {/* Hero Left - Text */}
           <motion.div 
@@ -149,11 +159,17 @@ export default function App() {
               className="relative z-10 w-full max-w-[280px] sm:max-w-md lg:max-w-lg transform-gpu -rotate-12 hover:rotate-0 transition-transform duration-700"
             >
               <div className="relative rounded-[2rem] overflow-hidden bg-white/5 border border-white/10 backdrop-blur-sm aspect-square md:aspect-square drop-shadow-[0_50px_50px_rgba(255,255,255,0.15)]">
-                 <img 
-                  src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&q=80&w=1000" 
-                  alt="Premium Sneaker Mockup" 
-                  className="w-full h-full object-cover grayscale brightness-110 contrast-125 mix-blend-screen opacity-90 transition-opacity duration-700 hover:opacity-100"
-                />
+                 <picture>
+                   <source media="(max-width: 768px)" srcSet="https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&q=80&w=600&fm=webp" type="image/webp" />
+                   <source media="(min-width: 769px)" srcSet="https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&q=80&w=1200&fm=webp" type="image/webp" />
+                   <img 
+                    src="https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&q=80&w=1000&fm=webp" 
+                    alt="Premium Sneaker Mockup" 
+                    className="w-full h-full object-cover grayscale brightness-110 contrast-125 mix-blend-screen opacity-90 transition-opacity duration-700 hover:opacity-100"
+                    loading="eager"
+                    decoding="async"
+                  />
+                 </picture>
               </div>
             </motion.div>
           </motion.div>
